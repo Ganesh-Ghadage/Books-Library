@@ -215,10 +215,15 @@ body {
 }
 
 
-.buttonDiv {
+.paginationDiv {
     display: flex;
-    justify-content: end;
-    margin-right: 2%;
+    justify-content: center;
+    gap: 8px;
+    margin-bottom: 20px;
+}
+
+.paginationDiv button {
+    padding: 10px 15px;
 }
 
 #loadMoreButton {

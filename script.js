@@ -1,5 +1,5 @@
 // function to fetch data from FreeAPI Books endpoint
-async function fetchBooks(page = 3) {
+async function fetchBooks(page = 1) {
     const url = `https://api.freeapi.app/api/v1/public/books?page=${page}`;
     const options = {method: 'GET', headers: {accept: 'application/json'}};
 
@@ -13,12 +13,11 @@ async function fetchBooks(page = 3) {
     }
 }
   
-
-  
 // grab required elements
 const bookContainer = document.querySelector('.bookContainer')
 const errorContainer = document.querySelector('.errorContainer')
 const loadingContainer = document.querySelector('.loadingContainer')
+const paginationDiv = document.querySelector('.paginationDiv')
 
 const searchInput = document.getElementById('searchInput')
 const searchByInput = document.getElementById('searchBy')
@@ -27,14 +26,14 @@ const resultTextDisplay = document.getElementById('resultText')
 
 let allBooks = []
   
-async function fetchAndUseBooks() {
+async function fetchAndUseBooks(page = 1) {
     try {
         loadingContainer.classList.remove('hidden')
         bookContainer.classList.add('hidden')
         
-        displayScelton()
+        displaySkeleton()
 
-        const booksData = await fetchBooks()
+        const booksData = await fetchBooks(page)
 
         if(booksData.success){
             allBooks = formatData(booksData.data)
@@ -54,17 +53,17 @@ async function fetchAndUseBooks() {
 
         const retryBtn = document.getElementById('retryBtn')
         retryBtn.addEventListener('click', fetchAndUseBooks)
+
+        console.log(error)
         
     } finally {
         loadingContainer.innerHTML = ''
         loadingContainer.classList.add('hidden')
         bookContainer.classList.remove('hidden')
     }
-
-    
 }
 
-function displayScelton(count = 10) {
+function displaySkeleton(count = 10) {
     loadingContainer.innerHTML = ''
 
     for(let i=0; i<count; i++) {
@@ -129,6 +128,36 @@ function displayBooks(books) {
     })
 }
 
+function updatePagination(paginationInfo) {
+    paginationDiv.innerHTML = ''
+
+    if(!paginationInfo){
+        return null
+    }
+
+    const {page, totalPages, nextPage, previousPage, limit, totalItems} = paginationInfo
+    let pageRange;
+
+    console.log(page)
+    if(page <= 3) {
+        pageRange = [1, 2, 3, 4, '...', totalPages-2, totalPages-1, totalPages]
+    } else if(page >= totalPages - 2) {
+        pageRange = [1, 2, 3, '...', totalPages-3, totalPages-2, totalPages-1, totalPages]
+    }
+    else {
+        pageRange = [1, '...', page-1, page, page+1, '...', totalPages]
+    } 
+
+    pageRange.forEach(pageNo => {
+        const pageButton = document.createElement('button')
+        pageButton.textContent = pageNo
+        paginationDiv.appendChild(pageButton)
+
+        pageButton.addEventListener('click', () => fetchAndUseBooks(pageNo))
+    })
+
+}
+
 function formatData(data) {
     const books = []
     const paginationInfo = {
@@ -154,6 +183,8 @@ function formatData(data) {
         books.push(bookObject)
     });
     
+    updatePagination(paginationInfo)
+
     return books
 }
 
