@@ -1,0 +1,279 @@
+@import url('https://fonts.googleapis.com/css2?family=Signika+Negative:wght@300..700&display=swap');
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Signika Negative", sans-serif;
+    font-optical-sizing: auto;
+    font-weight: 400;
+    font-style: normal;
+}
+
+body {
+    background-color: #1d1d1d;
+    color: #ffffff;
+}
+
+.container{
+    width: 100%;
+    height: 100%;
+}
+
+.navBar {
+    width: 100%;
+    position: sticky;
+    top: 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 20px;
+    background-color: #181818;
+    z-index: 20;
+}
+
+.searchBar {
+    width: 400px;
+    height: 40px;
+    display: flex;
+    border-radius: 20px;
+    background-color: #1d1d1d;
+}
+
+#searchBy {
+    width: 50%;
+    border-radius: 20px 0 0 20px;
+    padding: 0 10px;
+    border: 2px solid #1d1d1d;
+    background-color: #3a3a3a;
+    color: #ffffff;
+    font-size: 1em;
+}
+
+#searchInput {
+    width: 50%;
+    padding-left: 10px;
+    border: 2px solid #1d1d1d;
+    background-color: #3a3a3a;
+    color: #ffffff;
+    font-size: 1em;
+}
+
+#searchButton {
+    border-radius: 0 20px 20px 0;
+    border: 2px solid #1d1d1d;
+    padding: 0 8px;
+    background-color: #3a3a3a;
+    color: #ffffff;
+    cursor: pointer;
+    font-size: 1.2em;
+}
+
+.bookGrid {
+    width: 100%;
+    height: fit-content;
+}
+
+.bookContainer, .loadingContainer {
+    width: 100%;
+    height: 85%;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    grid-gap: 10px;
+    align-items: center;
+    justify-items: center;
+    padding: 20px;
+    margin-right: auto;
+}
+
+.errorContainer {
+    width: 100%;
+    margin-top: 20%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.loadingContainer {
+    animation: pluse 0.5 infinite;
+}
+
+.loadingDiv {
+    width: 300px;
+    height: 400px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    background-color: #414141;
+    border-radius: 20px;
+    padding: 10px;
+    animation: pluse 0.5 infinite;
+}
+
+.imageLoader {
+    width: 100%;
+    height: 250px;
+    background-color: #333333;
+    border-radius: 10px 10px 0 0 ;
+    animation: pluse 0.8s ease infinite;
+}
+
+.bookLoader {
+    width: 90%;
+    height: 20px;
+    background-color: #272626;
+    animation: swipe 2s ease infinite ;
+}
+
+.authorLoader {
+    width: 60%;
+    height: 20px;
+    background-color: #272626;
+    animation: swipe 2s ease infinite;
+}
+
+.publishLoader {
+    width: 70%;
+    height: 20px;
+    background-color: #272626;
+    animation: swipe 2s ease infinite;
+}
+
+
+.bookDiv {
+    width: 300px;
+    height: fit-content;
+    background-color: #424040;
+    border-radius: 10px;
+}
+
+.bookDiv a {
+    text-decoration: none;
+    color: #ffffff;
+}
+
+.bookDiv:hover {
+    box-shadow: 0 0 10px black;
+}
+
+#bookThumbnail {
+    width: 100%;
+    height: 80%;
+    max-height: 350px;
+    border-radius: 10px 10px 0 0;
+    object-fit: cover;
+    overflow: hidden;
+}
+
+.imgHoverZoom {
+    overflow: hidden;
+    border-radius: 10px 10px 0 0;
+}
+  
+.imgHoverZoom img {
+    transition: transform .5s ease;
+}
+  
+
+.imgHoverZoom:hover img {
+    transform: scale(1.1);
+}
+
+.ratings {
+    text-align: end;
+    font-size: 2em;
+    text-shadow: 2px 2px #000000;
+    color: gold;
+}
+
+.bookInfo {
+    padding: 0 20px 10px 10px;
+    height: fit-content;
+}
+
+#bookTitle {
+    max-width: 100%;
+    height: fit-content;
+    font-size: 1.4em;
+    font-weight: bold;
+}
+
+.infoTags {
+    font-weight: 800;
+    margin-top: 10px;
+}
+
+#retryBtn {
+    margin-top: 10px;
+    font-size: 1.1em;
+    padding: 8px 15px;
+    cursor: pointer;
+    background-color: #5c5b5b;
+    border-radius: 10px;
+    border: none;
+}
+
+
+.buttonDiv {
+    display: flex;
+    justify-content: end;
+    margin-right: 2%;
+}
+
+#loadMoreButton {
+    margin-bottom: 20px;
+    text-align: end;
+    padding: 8px 15px;
+    cursor: pointer;
+}
+
+#resultText {
+    margin-top: 10px;
+    margin-left: 20px;
+}
+
+.hidden {
+    display: none;
+}
+
+@media screen and (max-width: 480px) {
+    
+    .navBar {
+        flex-direction: column;
+        text-align: center;
+        gap: 10px;
+    }
+
+    .navBar h1 {
+        font-size: 1.7em;
+    }
+
+    .bookGrid {
+        padding: 10px 0;
+    }
+
+    .bookDiv {
+        width: 90%;
+    }
+
+}
+
+@keyframes pluse {
+    0%, 100% {
+        opacity: 0.5;
+    }
+    50% {
+        opacity: 0.9;
+    }
+}
+
+@keyframes swipe {
+    0%, 100% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0.7;
+        width: 0%;
+    }
+}
