@@ -24,6 +24,8 @@ const searchByInput = document.getElementById('searchBy')
 const searchButton = document.getElementById('searchButton')
 const resultTextDisplay = document.getElementById('resultText')
 const sortByInput = document.getElementById('sortBy')
+const gridLayoutButton = document.getElementById('gridLayout')
+const listLayoutButton = document.getElementById('listLayout')
 
 let allBooks = []
   
@@ -38,6 +40,8 @@ async function fetchAndUseBooks(page = 1) {
         const booksData = await fetchBooks(page)
 
         if(booksData.success){
+            errorContainer.classList.add('hidden')
+            errorContainer.innerHTML = ''
             allBooks = formatData(booksData.data)
             resultTextDisplay.classList.remove('hidden')
             paginationDiv.classList.remove('hidden')
@@ -94,8 +98,15 @@ function displayBooks(books) {
 
         errorContainer.innerHTML = `
             <h1 id="">No Result found ❌</h1>
-            <p>🔍 Search for something else...</p>`
-        
+            <p>🔍 Search for something else...</p>
+            <button id="loadAll">Load ALL Books</button>`
+
+        resultTextDisplay.textContent = ``
+
+        const loadAll = document.getElementById('loadAll')
+        loadAll.addEventListener('click', () => displayBooks(allBooks))
+
+        resultTextDisplay.textContent = `Showing Trendig results`
         return
     }
 
@@ -268,8 +279,6 @@ function sortBooks(options) {
 
     const[sortBy, order] = options.split('-')
 
-    console.log(sortBy , order)
-
     let sortedBooks = allBooks
 
     sortedBooks.sort(function (bookA, bookB) {
@@ -306,6 +315,20 @@ searchButton.addEventListener('click', () => {
 sortByInput.addEventListener('input', (e) => {
     const sortBy = e.target.value
     sortBooks(sortBy)
+})
+
+gridLayoutButton.addEventListener('click', () => {
+    bookContainer.classList.add('grid')
+    bookContainer.classList.remove('list')
+    gridLayoutButton.classList.add('active')
+    listLayoutButton.classList.remove('active')
+})
+
+listLayoutButton.addEventListener('click', () => {
+    bookContainer.classList.remove('grid')
+    bookContainer.classList.add('list')
+    gridLayoutButton.classList.remove('active')
+    listLayoutButton.classList.add('active')
 })
 
 fetchAndUseBooks()
