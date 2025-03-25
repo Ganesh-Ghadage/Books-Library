@@ -31,6 +31,7 @@ async function fetchAndUseBooks(page = 1) {
     try {
         loadingContainer.classList.remove('hidden')
         bookContainer.classList.add('hidden')
+        paginationDiv.classList.add('hidden')
         
         displaySkeleton()
 
@@ -39,14 +40,18 @@ async function fetchAndUseBooks(page = 1) {
         if(booksData.success){
             allBooks = formatData(booksData.data)
             resultTextDisplay.classList.remove('hidden')
+            paginationDiv.classList.remove('hidden')
             displayBooks(allBooks)
         }
 
     } catch (error) {
         loadingContainer.classList.add('hidden')
         bookContainer.classList.add('hidden')
+        paginationDiv.classList.add('hidden')
         errorContainer.classList.remove('hidden')
 
+        bookContainer.innerHTML = ''
+        
         errorContainer.innerHTML = `
             <h1 id="">Something went Wrong..</h1>
             <h3>Please Retry</h3>
@@ -61,6 +66,7 @@ async function fetchAndUseBooks(page = 1) {
         loadingContainer.innerHTML = ''
         loadingContainer.classList.add('hidden')
         bookContainer.classList.remove('hidden')
+        paginationDiv.classList.remove('hidden')
     }
 }
 
@@ -84,6 +90,7 @@ function displayBooks(books) {
     if(!books || books.length === 0) {
         errorContainer.classList.remove('hidden')
         bookContainer.classList.add('hidden')
+        paginationDiv.classList.add('hidden')
 
         errorContainer.innerHTML = `
             <h1 id="">No Result found ❌</h1>
@@ -94,6 +101,7 @@ function displayBooks(books) {
 
     errorContainer.classList.add('hidden')
     bookContainer.classList.remove('hidden')
+    paginationDiv.classList.remove('hidden')
 
     books.forEach((book, idx) => {
         const bookDiv = document.createElement('div')
