@@ -27,28 +27,41 @@ const sortByInput = document.getElementById('sortBy')
 const gridLayoutButton = document.getElementById('gridLayout')
 const listLayoutButton = document.getElementById('listLayout')
 
+// initlize global variable for books
 let allBooks = []
   
+// function to fetch and use the books data
 async function fetchAndUseBooks(page = 1) {
     try {
+        // show loading skeleton while books data is loading
         loadingContainer.classList.remove('hidden')
         bookContainer.classList.add('hidden')
         paginationDiv.classList.add('hidden')
         
         displaySkeleton()
 
+        // fetch books data using fetch function
         const booksData = await fetchBooks(page)
 
+        // if we get data display it on screen
         if(booksData.success){
+            // hide the errors
             errorContainer.classList.add('hidden')
             errorContainer.innerHTML = ''
+
+            // format the data in required format
             allBooks = formatData(booksData.data)
+
+            // display the result and pagination
             resultTextDisplay.classList.remove('hidden')
             paginationDiv.classList.remove('hidden')
+
+            //display books
             displayBooks(allBooks)
         }
 
     } catch (error) {
+        // handle error if any
         loadingContainer.classList.add('hidden')
         bookContainer.classList.add('hidden')
         paginationDiv.classList.add('hidden')
@@ -61,12 +74,14 @@ async function fetchAndUseBooks(page = 1) {
             <h3>Please Retry</h3>
             <button id="retryBtn">Retry</button>`
 
+        // retry button if we get any error
         const retryBtn = document.getElementById('retryBtn')
         retryBtn.addEventListener('click', fetchAndUseBooks)
 
         console.log(error)
         
     } finally {
+        // once we get result remove loading skeleton
         loadingContainer.innerHTML = ''
         loadingContainer.classList.add('hidden')
         bookContainer.classList.remove('hidden')
@@ -74,6 +89,7 @@ async function fetchAndUseBooks(page = 1) {
     }
 }
 
+// function to display loading skeleton
 function displaySkeleton(count = 10) {
     loadingContainer.innerHTML = ''
 
@@ -88,9 +104,11 @@ function displaySkeleton(count = 10) {
     }
 }
 
+// function to display books
 function displayBooks(books) {
     bookContainer.innerHTML = ''
 
+    // check if have books data or not, if not display error message
     if(!books || books.length === 0) {
         errorContainer.classList.remove('hidden')
         bookContainer.classList.add('hidden')
@@ -114,6 +132,7 @@ function displayBooks(books) {
     bookContainer.classList.remove('hidden')
     paginationDiv.classList.remove('hidden')
 
+    // display each book object on screen
     books.forEach((book, idx) => {
         const bookDiv = document.createElement('div')
         bookDiv.classList.add('bookDiv')
@@ -148,6 +167,7 @@ function displayBooks(books) {
     })
 }
 
+// function to display pagination buttons
 function updatePagination(paginationInfo) {
     paginationDiv.innerHTML = ''
 
@@ -167,6 +187,7 @@ function updatePagination(paginationInfo) {
         pageRange = [1, '...', page-1, page, page+1, '...', totalPages]
     } 
 
+    // previous page button
     const prevButton = document.createElement('button')
     prevButton.textContent = '≪ Prev'
     prevButton.classList.add('pageBtn')
@@ -174,6 +195,7 @@ function updatePagination(paginationInfo) {
     paginationDiv.appendChild(prevButton)
     prevButton.addEventListener('click', () => fetchAndUseBooks(page - 1))
 
+    // all pages buttons
     pageRange.forEach(pageNo => {
         const pageButton = document.createElement('button')
         pageButton.textContent = pageNo
@@ -193,6 +215,7 @@ function updatePagination(paginationInfo) {
         pageButton.addEventListener('click', () => fetchAndUseBooks(pageNo))
     })
 
+    // next page button
     const nextButton = document.createElement('button')
     nextButton.textContent = 'Next ≫'
     nextButton.classList.add('pageBtn')
@@ -201,7 +224,9 @@ function updatePagination(paginationInfo) {
     nextButton.addEventListener('click', () => fetchAndUseBooks(page + 1))
 }
 
+// function to format the data in required format
 function formatData(data) {
+    // get pagination information
     const paginationInfo = {
         page: data.page,
         limit: data.limit,
@@ -218,6 +243,7 @@ function formatData(data) {
     return books
 }
 
+// function to process each books data
 function formatBooksData(bookObj) {
     if(!bookObj.volumeInfo) {
        console.error("Invalid book Object", bookObj)
@@ -248,6 +274,7 @@ function formatBooksData(bookObj) {
     }
 }
 
+// function to implement search
 function searchBooks(query, tag = 'title') {
     if(!query) {
         return null
@@ -273,6 +300,7 @@ function searchBooks(query, tag = 'title') {
     displayBooks(filtredBooks)
 }
 
+// function to sort books data
 function sortBooks(options) {
     if(!options) {
         displayBooks(allBooks)
@@ -284,6 +312,7 @@ function sortBooks(options) {
     let sortedBooks = [...allBooks]
 
     sortedBooks.sort(function (bookA, bookB) {
+        // accending sort
         if(order === 'ace') {
             if (bookA[sortBy] < bookB[sortBy]) {
                 return -1;
@@ -292,7 +321,9 @@ function sortBooks(options) {
                 return 1;
             }
             return 0;
-        } else if (order === 'dec') {
+        } 
+        // decending sort
+        else if (order === 'dec') {
             if (bookA[sortBy] > bookB[sortBy]) {
                 return -1;
             }
@@ -307,14 +338,16 @@ function sortBooks(options) {
     displayBooks(sortedBooks)
 }
 
+// search button event listener
 searchButton.addEventListener('click', () => {
-
+    // if search button has ❌ remove search filter / clear search
     if(searchButton.innerText === '❌') {
         displayBooks(allBooks)
         searchInput.value = ''
         searchButton.innerText = '🔍'
         resultTextDisplay.textContent = `Showing Trendig results`
     } else {
+        // else filter the books as per search query
         const searchBy = searchByInput.value
         const query = searchInput.value
         searchBooks(query, searchBy)
@@ -322,11 +355,13 @@ searchButton.addEventListener('click', () => {
     
 })
 
+// sort event listener
 sortByInput.addEventListener('input', (e) => {
     const sortBy = e.target.value
     sortBooks(sortBy)
 })
 
+// event listener to change layout to grid
 gridLayoutButton.addEventListener('click', () => {
     bookContainer.classList.add('grid')
     bookContainer.classList.remove('list')
@@ -334,6 +369,7 @@ gridLayoutButton.addEventListener('click', () => {
     listLayoutButton.classList.remove('active')
 })
 
+// event listener to change layout to list
 listLayoutButton.addEventListener('click', () => {
     bookContainer.classList.remove('grid')
     bookContainer.classList.add('list')
@@ -341,4 +377,5 @@ listLayoutButton.addEventListener('click', () => {
     listLayoutButton.classList.add('active')
 })
 
+// to display the books when page is loaded initially
 fetchAndUseBooks()
