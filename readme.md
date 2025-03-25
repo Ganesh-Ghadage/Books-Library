@@ -1,6 +1,6 @@
 # Books Library
 
-A Book Library webite using FreeAPI.app that will fetch and display book data dynamically in a user-friendly way.
+A Book Library website using FreeAPI.app that will fetch and display book data dynamically in a user-friendly way.
 
 ## Tech Stack
  - HTML
