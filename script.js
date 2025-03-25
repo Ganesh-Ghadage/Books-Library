@@ -171,6 +171,11 @@ function displayBooks(books) {
 function updatePagination(paginationInfo) {
     paginationDiv.innerHTML = ''
 
+    // to remove search filter when we change page
+    searchInput.value = ''
+    searchButton.innerText = '🔍'
+    resultTextDisplay.textContent = `Showing Trendig results`
+
     if(!paginationInfo){
         return null
     }
