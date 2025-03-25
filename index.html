@@ -19,6 +19,17 @@
                 <input type="text" id="searchInput" placeholder="Search Something...">
                 <button id="searchButton">🔍</button>
             </div>
+
+            <div class="sortByDiv">
+                <p>Sort By</p>
+                <select name="sortType" id="sortBy" >
+                    <option value="">Select Something</option>
+                    <option value="title-ace">Sort By Title [A-Z]</option>
+                    <option value="title-dec">Sort By Title [Z-A]</option>
+                    <option value="publishedDate-ace">Sort By Published Date [0-1]</option>
+                    <option value="publishedDate-dec">Sort By Published Date [1-0]</option>
+                </select>
+            </div>
         </div>
 
         <p id="resultText" class="hidden">Showing Trendig results</p>

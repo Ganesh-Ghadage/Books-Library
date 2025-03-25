@@ -23,6 +23,7 @@ const searchInput = document.getElementById('searchInput')
 const searchByInput = document.getElementById('searchBy')
 const searchButton = document.getElementById('searchButton')
 const resultTextDisplay = document.getElementById('resultText')
+const sortByInput = document.getElementById('sortBy')
 
 let allBooks = []
   
@@ -252,11 +253,51 @@ function searchBooks(query, tag = 'title') {
     displayBooks(filtredBooks)
 }
 
+function sortBooks(options) {
+    if(!options) {
+        return null
+    }
+
+    const[sortBy, order] = options.split('-')
+
+    console.log(sortBy , order)
+
+    let sortedBooks = allBooks
+
+    sortedBooks.sort(function (bookA, bookB) {
+        if(order === 'ace') {
+            if (bookA[sortBy] < bookB[sortBy]) {
+                return -1;
+            }
+            if (bookA[sortBy] > bookB[sortBy]) {
+                return 1;
+            }
+            return 0;
+        } else if (order === 'dec') {
+            if (bookA[sortBy] > bookB[sortBy]) {
+                return -1;
+            }
+            if (bookA[sortBy] < bookB[sortBy]) {
+                return 1;
+            }
+            return 0;
+        }
+        
+    });
+
+    displayBooks(sortedBooks)
+}
+
 searchButton.addEventListener('click', () => {
     const searchBy = searchByInput.value
     const query = searchInput.value
     searchBooks(query, searchBy)
     searchInput.value = ''
+})
+
+sortByInput.addEventListener('input', (e) => {
+    const sortBy = e.target.value
+    sortBooks(sortBy)
 })
 
 fetchAndUseBooks()
