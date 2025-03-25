@@ -34,3 +34,9 @@ Search filter
 
 Sort Options
 ![sort](./assetes/image-5.png)
+
+## Deployments
+
+[Live Demo](https://books-library-beta.vercel.app/)
+
+[GitHub Repo](https://github.com/Ganesh-Ghadage/Books-Library)
