@@ -222,8 +222,18 @@ body {
     margin-bottom: 20px;
 }
 
-.paginationDiv button {
+.pageBtn {
     padding: 10px 15px;
+    background-color: #e3e3e3;
+    border: none;
+    cursor: pointer;
+}
+
+.pageBtn:disabled {
+    cursor: not-allowed;
+    opacity: 0.6;
+    border: none;
+    transform: scale(0.8);
 }
 
 #loadMoreButton {
@@ -240,6 +250,11 @@ body {
 
 .hidden {
     display: none;
+}
+
+.active {
+    border: 2px solid rgb(6, 122, 4);
+    transform: scale(1.1);
 }
 
 @media screen and (max-width: 480px) {

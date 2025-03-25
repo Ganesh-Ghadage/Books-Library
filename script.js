@@ -99,26 +99,26 @@ function displayBooks(books) {
         bookDiv.classList.add('bookDiv')
 
         bookDiv.innerHTML = `
-        <a href=${book.infoLink} target="_blank">
+        <a href=${book?.infoLink} target="_blank">
             <div class="imgHoverZoom">
-                <img id="bookThumbnail" src=${book.thumbnail.thumbnail} alt="book thumbnail">
+                <img id="bookThumbnail" src=${book?.thumbnail} alt="book thumbnail">
                  
             </div>
             <div class="bookInfo">
-                <p id="bookTitle">${book.title}</p>
+                <p id="bookTitle">${book?.title}</p>
                 <div class="authorInfo">
                     <p id="authors" class="infoTags">Authors :
                         <span>
-                            ${book.authors.join(', ')}
+                            ${book?.authors?.join(', ')}
                         </span>
                     </p>
                 </div>
                 <div class="publishInfo">
-                    <p id="publishedDate" class="infoTags">Published Date: <span>${book.publishedDate}</span></p>
-                    <p id="publishedBy" class="infoTags">Published By: <span>${book.publisher}</span></p>
+                    <p id="publishedDate" class="infoTags">Published Date: <span>${book?.publishedDate}</span></p>
+                    <p id="publishedBy" class="infoTags">Published By: <span>${book?.publisher}</span></p>
                 </div>
                 <div class="ratings">
-                    ${ book.ratings ? '★'.repeat(book.ratings).padEnd(5, '✰') : '' }
+                    ${ book?.ratings ? '★'.repeat(book.ratings).padEnd(5, '✰') : '' }
                 </div> 
             </div>
         </a>`
@@ -138,7 +138,6 @@ function updatePagination(paginationInfo) {
     const {page, totalPages, nextPage, previousPage, limit, totalItems} = paginationInfo
     let pageRange;
 
-    console.log(page)
     if(page <= 3) {
         pageRange = [1, 2, 3, 4, '...', totalPages-2, totalPages-1, totalPages]
     } else if(page >= totalPages - 2) {
@@ -148,18 +147,41 @@ function updatePagination(paginationInfo) {
         pageRange = [1, '...', page-1, page, page+1, '...', totalPages]
     } 
 
+    const prevButton = document.createElement('button')
+    prevButton.textContent = '≪ Prev'
+    prevButton.classList.add('pageBtn')
+    prevButton.disabled = !previousPage
+    paginationDiv.appendChild(prevButton)
+    prevButton.addEventListener('click', () => fetchAndUseBooks(page - 1))
+
     pageRange.forEach(pageNo => {
         const pageButton = document.createElement('button')
         pageButton.textContent = pageNo
+        pageButton.classList.add('pageBtn')
         paginationDiv.appendChild(pageButton)
 
+        if(pageNo === '...'){
+            pageButton.disabled = true
+        }
+        
+        if(page === pageNo) {
+            pageButton.classList.add('active')
+        } else {
+            pageButton.classList.remove('active')
+        }
+        
         pageButton.addEventListener('click', () => fetchAndUseBooks(pageNo))
     })
 
+    const nextButton = document.createElement('button')
+    nextButton.textContent = 'Next ≫'
+    nextButton.classList.add('pageBtn')
+    nextButton.disabled = !nextPage
+    paginationDiv.appendChild(nextButton)
+    nextButton.addEventListener('click', () => fetchAndUseBooks(page + 1))
 }
 
 function formatData(data) {
-    const books = []
     const paginationInfo = {
         page: data.page,
         limit: data.limit,
@@ -169,23 +191,41 @@ function formatData(data) {
         totalPages: data.totalPages
     }
 
-    data.data.forEach(book => {
-        const bookObject = {
-            title: book.volumeInfo.title,
-            authors: book.volumeInfo.authors,
-            publisher: book.volumeInfo.publisher,
-            publishedDate: book.volumeInfo.publishedDate,
-            thumbnail: book.volumeInfo.imageLinks,
-            infoLink: book.volumeInfo.infoLink,
-            ratings: book.volumeInfo.averageRating,
-        }
-
-        books.push(bookObject)
-    });
+    const books = data.data.map(book => formatBooksData(book)).filter(book => book !== null)
     
     updatePagination(paginationInfo)
 
     return books
+}
+
+function formatBooksData(bookObj) {
+    if(!bookObj.volumeInfo) {
+       console.error("Invalid book Object", bookObj)
+       return null
+    }
+
+    const bookInfo = bookObj.volumeInfo
+
+    if(!bookInfo.title ||
+        !bookInfo.authors ||
+        !bookInfo.publisher ||
+        !bookInfo.publishedDate ||
+        !bookInfo.imageLinks ||
+        !bookInfo.infoLink
+    ) {
+        console.error("Invalid book Object structure", bookObj)
+        return null
+    }
+
+    return {
+        title: bookInfo.title,
+        authors: bookInfo.authors,
+        publisher: bookInfo.publisher,
+        publishedDate: bookInfo.publishedDate,
+        thumbnail: bookInfo.imageLinks?.thumbnail ||  bookInfo.imageLinks?.smallThumbnail ,
+        infoLink: bookInfo.infoLink,
+        ratings: bookInfo?.averageRating,
+    }
 }
 
 function searchBooks(query, tag = 'title') {
