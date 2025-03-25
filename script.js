@@ -268,18 +268,20 @@ function searchBooks(query, tag = 'title') {
     }
 
     resultTextDisplay.textContent = `Showing ${tag} result for '${query}'`
+    searchButton.innerText = '❌'
 
     displayBooks(filtredBooks)
 }
 
 function sortBooks(options) {
     if(!options) {
+        displayBooks(allBooks)
         return null
     }
 
     const[sortBy, order] = options.split('-')
 
-    let sortedBooks = allBooks
+    let sortedBooks = [...allBooks]
 
     sortedBooks.sort(function (bookA, bookB) {
         if(order === 'ace') {
@@ -306,10 +308,18 @@ function sortBooks(options) {
 }
 
 searchButton.addEventListener('click', () => {
-    const searchBy = searchByInput.value
-    const query = searchInput.value
-    searchBooks(query, searchBy)
-    searchInput.value = ''
+
+    if(searchButton.innerText === '❌') {
+        displayBooks(allBooks)
+        searchInput.value = ''
+        searchButton.innerText = '🔍'
+        resultTextDisplay.textContent = `Showing Trendig results`
+    } else {
+        const searchBy = searchByInput.value
+        const query = searchInput.value
+        searchBooks(query, searchBy)
+    }
+    
 })
 
 sortByInput.addEventListener('input', (e) => {
